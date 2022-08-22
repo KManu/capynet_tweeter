@@ -1,0 +1,42 @@
+@startuml ContentManager
+left to right direction
+
+package Triggers {
+  actor systemCron  
+  actor webClient
+}
+
+actor Twitter
+
+usecase  GetPostData as "Get post data"
+usecase  SetPostData as "Set post data"
+
+package Tweeter{
+  usecase  AutoFire as  "Fire Scheduled Tweet"
+  usecase  CheckSchedule as "Check for scheduled tweet"
+  usecase  PostTweet AS "Post Tweet"
+  usecase  RTSelf as "Retweet old content"
+  usecase  InitTwitterConnection as "Init twitter connection"
+  
+  usecase  DispatchEvents as "Dispatch events"
+
+  systemCron --> AutoFire
+  webClient --> PostTweet
+
+  AutoFire --> CheckSchedule
+  AutoFire --> PostTweet
+  AutoFire --> RTSelf
+  AutoFire --> InitTwitterConnection
+
+  PostTweet --> Twitter
+  InitTwitterConnection --> Twitter
+  RTSelf --> Twitter
+
+  CheckSchedule --> GetPostData
+
+  PostTweet --> SetPostData
+  DispatchEvents <-- PostTweet
+
+}
+
+@enduml
