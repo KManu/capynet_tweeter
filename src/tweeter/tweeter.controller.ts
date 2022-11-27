@@ -28,6 +28,23 @@ export class TweeterController {
         } 
     }
 
+    @Post('postScheduledTweet')
+    async postScheduledTweet(@Body() body: {contentID:string}) {
+        let opStatus:boolean = false;
+        let opDetails:Object = undefined;
+        try {
+            opDetails = await this.tweeterService.postTweet(body.contentID);
+            opStatus = true;
+        } catch (error) {
+            opStatus = false;
+            opDetails = error;
+        }  
+        return {
+            status: opStatus,
+            details: opDetails
+        } 
+    }
+
     @Get('getTweetSchedule')
     async getTweetSchedule(){
         let opStatus:boolean = false;
@@ -45,6 +62,5 @@ export class TweeterController {
             status: opStatus,
             details: opDetails
         } 
-        
     }
 }
